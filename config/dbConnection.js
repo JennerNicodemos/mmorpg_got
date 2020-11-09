@@ -15,7 +15,6 @@ let connMongoDB = function() {
     return db
 }
 
-
 module.exports = function() {
     return connMongoDB
 }
