@@ -52,6 +52,19 @@ JogoDAO.prototype.acao = function(acao){
     })
 }
 
+JogoDAO.prototype.getAcoes = function(usuario){
+    this._connection.open( function(err, mongoclient){
+        mongoclient.collection('acao', function(err, collection){
+            collection.find({usuario: usuario}).toArray(function(err, result){
+                console.log(result)
+                mongoclient.close()
+            })
+        })
+    })
+
+    console.log('recuperar ações')
+}
+
 
 module.exports = function(){
     return JogoDAO
