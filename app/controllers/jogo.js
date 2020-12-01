@@ -5,12 +5,10 @@ module.exports.jogo = function(application, req, res) {
         return
     }
 
-    let comando_invalido = 'N'
-    if (req.query.comando_invalido == "S"){
-        comando_invalido = "S"
+    let msg = ''
+    if (req.query.msg != ''){
+        msg = req.query.msg
     }
-
-    console.log(comando_invalido)
 
     let usuario = req.session.usuario
     let casa = req.session.casa
@@ -18,7 +16,7 @@ module.exports.jogo = function(application, req, res) {
     let connection = application.config.dbConnection
     let JogoDAO = new application.app.models.JogoDAO(connection)
 
-    JogoDAO.iniciaJogo(res, usuario, casa, comando_invalido)
+    JogoDAO.iniciaJogo(res, usuario, casa, msg)
     
 }
 
@@ -61,10 +59,15 @@ module.exports.ordenar_acao_suditos = function(application, req, res) {
     let erros = req.validationErrors()
 
     if(erros){
-        res.redirect('jogo?comando_invalido=S')
+        res.redirect('jogo?msg=A')
         return
     }
 
-    console.log(dadosForm)
-    res.send('tudo ok')
+    let connection = application.config.dbConnection
+    let JogoDAO = new application.app.models.JogoDAO(connection)
+
+    dadosForm.usuario = req.session.usuario
+    JogoDAO.acao(dadosForm)
+
+    res.redirect('jogo?msg=B')
 }
